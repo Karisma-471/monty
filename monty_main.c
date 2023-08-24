@@ -1,22 +1,45 @@
 #include "monty.h"
 
+bus_t *arguments = NULL;
+
+/**
+* main - monty code interpreter
+* @argc: The number of command line arguments
+* @argv: A pointer to an array containing CLA
+* @arguments: arguments taken
+* Return: 0 on success
+*/
 int main(int argc, char *argv[])
 {
-	if (argc != 2)
+	size_t n = 0;
+	int fd;
+
+	arguments_validation(argc);
+	arguments_init();
+
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		get_file_failed(argv[1]);
+
+	arguments->file = fdopen(fd, "r");
+	if (arguments->file == NULL)
 	{
-		fprintf(stderr, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
+		close(fd);
+		get_file_failed(argv[1]);
 	}
 
-	char *file_path = argv[1];
-
-	FILE *file = fopen(file_path, "r");
-
-	if (file == NULL)
+	while (getline(&arguments->comment, &n, arguments->file) != -1)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", file_path);
-		exit(EXIT_FAILURE);
+		arguments->line_number += 1;
+		to_tokenize_comment();
+
+		to_get_instruction();
+		to_run_instruction();
+		to_free_tokens();
 	}
 
-	return(0);
+	close_file();
+	free_arguments();
+
+	return (0);
 }
