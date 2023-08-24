@@ -1,7 +1,7 @@
 #include "monty.h"
 
 /**
-  * set_n_tokens -
+  * set_n_tokens - sets and tokens
   */
 
 void set_n_tokens(void)

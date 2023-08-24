@@ -5,7 +5,7 @@
  * struct bus_s.
  * @arguments: arguments
  */
-void arguments_init()
+void arguments_init(void)
 {
 	arguments = malloc(sizeof(bus_t));
 	if (arguments == NULL)
